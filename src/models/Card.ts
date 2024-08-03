@@ -5,7 +5,6 @@ import type { CardColor, CardRank, CardSuit } from './card.model'
  *
  * card terminology shamelessly stolen from wikipedia: https://en.wikipedia.org/wiki/Standard_52-card_deck
  *
- *
  */
 export class Card {
   rank: CardRank

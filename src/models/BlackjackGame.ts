@@ -1,4 +1,4 @@
-import type { Deck } from './Deck'
+import { Deck } from './Deck'
 import { GameBase } from './Game'
 import type { Player } from './Player'
 
@@ -25,8 +25,11 @@ export class Blackjack extends GameBase {
     super(props)
   }
   startGame() {
-    this.resetGame()
+    this.deck = new Deck()
     this.deck.shuffle()
+    this.players.forEach((player) => {
+      player.cards = []
+    })
     for (let i = 0; i < 2; i++) {
       this.players.forEach((player) => {
         player.cards.push(this.deck.dealCard())
@@ -34,9 +37,24 @@ export class Blackjack extends GameBase {
     }
   }
 
-  resetGame() {
-    this.players.forEach((player) => {
-      player.cards = []
-    })
+  getPlayerScore(player: Player) {
+    // need to calculate the ace last to account for the case where the ace is worth 11 or 1
+    const cardsSorted = [...player.cards].sort((a, b) => (a.isAce ? 1 : -1))
+
+    return cardsSorted.reduce((score, card) => {
+      let cardScore = 0
+      if (card.rank === 'A') {
+        if (score + 11 > 21) {
+          cardScore = 1
+        } else {
+          cardScore = 11
+        }
+      } else if (['K', 'Q', 'J'].includes(card.rank)) {
+        cardScore = 10
+      } else {
+        cardScore = parseInt(card.rank)
+      }
+      return score + cardScore
+    }, 0)
   }
 }

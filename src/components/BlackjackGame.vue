@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { Blackjack } from '@/models/BlackjackGame'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps<{
   blackjack: Blackjack
 }>()
-onMounted(() => {})
 const dealer = computed(() => {
-  return props.blackjack.players.find((p) => p.isDealer)
+  return props.blackjack.players.find((p) => p.isDealer)!
 })
 const activePlayers = computed(() => {
   return props.blackjack.players.filter((p) => !p.isDealer)
@@ -36,12 +35,14 @@ function stay() {
     <div>
       Dealer cards:
       <ul>
-        <li v-for="card in dealer?.cards" :key="card.id">
+        <li v-for="card in dealer.cards" :key="card.id">
           <div class="card">
             {{ card.fullName }}
           </div>
         </li>
       </ul>
+
+      <div>Total: {{ props.blackjack.getPlayerScore(dealer) }}</div>
     </div>
     <div class="" v-for="p of activePlayers" :key="p.name">
       <div>
@@ -53,6 +54,8 @@ function stay() {
             </div>
           </li>
         </ul>
+
+        <div>Total: {{ props.blackjack.getPlayerScore(p) }}</div>
 
         <button type="button" class="btn" @click="dealCard">Hit</button>
         <button type="button" class="btn" @click="stay">Stay</button>
