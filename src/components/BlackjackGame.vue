@@ -1,26 +1,21 @@
 <script setup lang="ts">
 import { Blackjack } from '@/models/BlackjackGame'
-import { computed } from 'vue'
+import type { Player } from '@/models/Player'
+import PlayerHand from './PlayerHand.vue'
 
 const props = defineProps<{
   blackjack: Blackjack
 }>()
-const dealer = computed(() => {
-  return props.blackjack.players.find((p) => p.isDealer)!
-})
-const activePlayers = computed(() => {
-  return props.blackjack.players.filter((p) => !p.isDealer)
-})
 
 function startGame() {
   console.log('Game started')
   props.blackjack.startGame()
 }
-function dealCard() {
-  console.log('Card dealt')
+function dealCard(player: Player) {
+  props.blackjack.playerHit(player)
 }
-function stay() {
-  console.log('Player stays')
+function stay(player: Player) {
+  props.blackjack.playerStay(player)
 }
 </script>
 
@@ -32,34 +27,14 @@ function stay() {
   </div>
 
   <section class="flex flex-col justify-center items-center">
-    <div>
-      Dealer cards:
-      <ul>
-        <li v-for="card in dealer.cards" :key="card.id">
-          <div class="card">
-            {{ card.fullName }}
-          </div>
-        </li>
-      </ul>
-
-      <div>Total: {{ props.blackjack.getPlayerScore(dealer) }}</div>
-    </div>
-    <div class="" v-for="p of activePlayers" :key="p.name">
-      <div>
-        {{ p.name }}'s cards:
-        <ul>
-          <li v-for="card in p.cards" :key="card.id">
-            <div class="card">
-              {{ card.fullName }}
-            </div>
-          </li>
-        </ul>
-
-        <div>Total: {{ props.blackjack.getPlayerScore(p) }}</div>
-
-        <button type="button" class="btn" @click="dealCard">Hit</button>
-        <button type="button" class="btn" @click="stay">Stay</button>
-      </div>
+    <PlayerHand
+      :blackjack="blackjack"
+      :player="blackjack.getDealer()"
+      :dealCard="dealCard"
+      :stay="stay"
+    />
+    <div v-for="p of blackjack.getPlayers()" :key="p.name">
+      <PlayerHand :blackjack="blackjack" :player="p" @dealCard="dealCard" @stay="stay" />
     </div>
   </section>
 </template>

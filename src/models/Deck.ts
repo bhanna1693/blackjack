@@ -19,16 +19,15 @@ export class Deck {
     'A'
   ]
   private readonly cardSuits: CardSuit[] = ['hearts', 'diamonds', 'clubs', 'spades']
-  constructor(cards: Card[] = []) {
-    this.cards = cards
-    if (cards.length === 0) {
-      this.reset()
-    }
+  numberOfDecks: number
+  constructor(numberOfDecks = 1) {
+    this.numberOfDecks = numberOfDecks
+    this.reset()
   }
 
   shuffle() {
     // shuffle the deck
-    this.cards.sort(() => Math.random() - 0.5)
+    this.cards = [...this.cards].sort(() => Math.random() - 0.5)
   }
 
   dealCard(): Card {
@@ -43,10 +42,12 @@ export class Deck {
   reset() {
     this.cards = []
     // add all the cards back to the deck
-    this.cardRanks.forEach((rank) => {
-      this.cardSuits.forEach((suit) => {
-        this.cards.push(new Card({ rank: rank as CardRank, suit: suit as CardSuit }))
+    for (let i = 0; i < this.numberOfDecks; i++) {
+      this.cardRanks.forEach((rank) => {
+        this.cardSuits.forEach((suit) => {
+          this.cards.push(new Card({ rank: rank as CardRank, suit: suit as CardSuit }))
+        })
       })
-    })
+    }
   }
 }

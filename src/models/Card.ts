@@ -38,7 +38,7 @@ export class Card {
   }
 
   get svgUrl(): string {
-    return `${this.suit.toLowerCase()}_${this.rank}`
+    return `@/assets/images/svg_playing_cards/fronts/png_96_dpi/${this.suit.toLowerCase()}_${this.fullRank.toLowerCase()}.png`
   }
 
   get isFaceCard(): boolean {
