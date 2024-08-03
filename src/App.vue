@@ -1,31 +1,26 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { routes } from './router/routes'
+const _routes = ref(routes)
 </script>
 
 <template>
   <header>
-    <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/blackjack">Blackjack</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
+    <nav class="flex bg-primary">
+      <RouterLink
+        v-for="r of _routes"
+        :key="r.name"
+        :to="r.path"
+        :class="'btn btn-primary rounded-none'"
+        >{{ r.name }}</RouterLink
+      >
     </nav>
   </header>
-  <!-- <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/blackjack">Blackjack</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header> -->
-
-  <RouterView />
+  <main class="px-4 mt-4">
+    <RouterView />
+  </main>
 </template>
 
 <style scoped></style>

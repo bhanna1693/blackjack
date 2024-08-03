@@ -1,22 +1,37 @@
-import { cardLabelValueMap, cardSuitToColor } from './card.const'
-import type { CardLabel, CardSuit } from './card.model'
-import { CardBase } from './CardBase'
+import { BlackjackCard } from './BlackjackCard'
+import { type CardRank, type CardSuit } from './card.model'
 
 export class Deck {
-  public cards: CardBase[] = []
-  constructor(cards: CardBase[] = []) {
+  cards: BlackjackCard[] = []
+  private readonly cardRanks: CardRank[] = [
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    'J',
+    'Q',
+    'K',
+    'A'
+  ]
+  private readonly cardSuits: CardSuit[] = ['hearts', 'diamonds', 'clubs', 'spades']
+  constructor(cards: BlackjackCard[] = []) {
     this.cards = cards
     if (cards.length === 0) {
       this.reset()
     }
   }
 
-  public shuffle() {
+  shuffle() {
     // shuffle the deck
     this.cards.sort(() => Math.random() - 0.5)
   }
 
-  public dealCard(): CardBase {
+  dealCard(): BlackjackCard {
     // deal a card
     const card = this.cards.pop()
     if (!card) {
@@ -25,12 +40,12 @@ export class Deck {
     return card
   }
 
-  public reset() {
+  reset() {
     this.cards = []
     // add all the cards back to the deck
-    Object.keys(cardSuitToColor).forEach((suit) => {
-      Object.keys(cardLabelValueMap).forEach((label) => {
-        this.cards.push(new CardBase({ label: label as CardLabel, suit: suit as CardSuit }))
+    Object.keys(this.cardRanks).forEach((suit) => {
+      Object.keys(this.cardSuits).forEach((rank) => {
+        this.cards.push(new BlackjackCard({ rank: rank as CardRank, suit: suit as CardSuit }))
       })
     })
   }
