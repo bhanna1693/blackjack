@@ -16,7 +16,7 @@ export class Deck {
     this.cards.sort(() => Math.random() - 0.5)
   }
 
-  public deal(): CardBase {
+  public dealCard(): CardBase {
     // deal a card
     const card = this.cards.pop()
     if (!card) {
@@ -33,5 +33,8 @@ export class Deck {
         this.cards.push(new CardBase({ label: label as CardLabel, suit: suit as CardSuit }))
       })
     })
+  }
+  isNewDeck() {
+    return this.cards.length === 52
   }
 }
