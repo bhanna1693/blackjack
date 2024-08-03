@@ -1,8 +1,8 @@
-import { BlackjackCard } from './BlackjackCard'
+import { Card } from './Card'
 import { type CardRank, type CardSuit } from './card.model'
 
 export class Deck {
-  cards: BlackjackCard[] = []
+  cards: Card[] = []
   private readonly cardRanks: CardRank[] = [
     '2',
     '3',
@@ -19,7 +19,7 @@ export class Deck {
     'A'
   ]
   private readonly cardSuits: CardSuit[] = ['hearts', 'diamonds', 'clubs', 'spades']
-  constructor(cards: BlackjackCard[] = []) {
+  constructor(cards: Card[] = []) {
     this.cards = cards
     if (cards.length === 0) {
       this.reset()
@@ -31,7 +31,7 @@ export class Deck {
     this.cards.sort(() => Math.random() - 0.5)
   }
 
-  dealCard(): BlackjackCard {
+  dealCard(): Card {
     // deal a card
     const card = this.cards.pop()
     if (!card) {
@@ -43,13 +43,10 @@ export class Deck {
   reset() {
     this.cards = []
     // add all the cards back to the deck
-    Object.keys(this.cardRanks).forEach((suit) => {
-      Object.keys(this.cardSuits).forEach((rank) => {
-        this.cards.push(new BlackjackCard({ rank: rank as CardRank, suit: suit as CardSuit }))
+    this.cardRanks.forEach((rank) => {
+      this.cardSuits.forEach((suit) => {
+        this.cards.push(new Card({ rank: rank as CardRank, suit: suit as CardSuit }))
       })
     })
-  }
-  isNewDeck() {
-    return this.cards.length === 52
   }
 }

@@ -1,34 +1,24 @@
 <script setup lang="ts">
-import { BlackjackCard } from '@/models'
-import { Deck } from '@/models/Deck'
-import { computed, ref } from 'vue'
+import { Blackjack } from '@/models/BlackjackGame'
+import { computed, onMounted } from 'vue'
 
 const props = defineProps<{
-  deck: Deck
+  blackjack: Blackjack
 }>()
-const playerCards = ref<BlackjackCard[]>([])
-const dealerCards = ref<BlackjackCard[]>([])
-const isPlayerTurn = ref(true)
-
-const playerScore = computed(() => {
-  return playerCards.value.reduce((acc, card) => acc + card.value, 0)
+onMounted(() => {})
+const dealer = computed(() => {
+  return props.blackjack.players.find((p) => p.isDealer)
+})
+const activePlayers = computed(() => {
+  return props.blackjack.players.filter((p) => !p.isDealer)
 })
 
 function startGame() {
   console.log('Game started')
-  if (props.deck.isNewDeck()) {
-    props.deck.shuffle()
-  }
-  playerCards.value = []
-  dealerCards.value = []
-  for (let i = 0; i < 2; i++) {
-    playerCards.value.push(props.deck.dealCard()!)
-    dealerCards.value.push(props.deck.dealCard()!)
-  }
+  props.blackjack.startGame()
 }
 function dealCard() {
   console.log('Card dealt')
-  playerCards.value.push(props.deck.dealCard()!)
 }
 function stay() {
   console.log('Player stays')
@@ -36,29 +26,37 @@ function stay() {
 </script>
 
 <template>
-  <div class="">
-    <button type="button" class="btn" @click="startGame">Start New Game</button>
-    <button type="button" class="btn" @click="dealCard">Hit</button>
-    <button type="button" class="btn" @click="stay">Stay</button>
-  </div>
-  <div>Deck has {{ deck.cards.length }} cards.</div>
+  <h1>Blackjack</h1>
 
-  <section class="flex flex-col">
+  <div class="flex items-center justify-center">
+    <button type="button" class="btn" @click="startGame">Start New Game</button>
+  </div>
+
+  <section class="flex flex-col justify-center items-center">
     <div>
       Dealer cards:
       <ul>
-        <li v-for="card in dealerCards" :key="card.id">
+        <li v-for="card in dealer?.cards" :key="card.id">
           <div class="card">
             {{ card.fullName }}
           </div>
         </li>
       </ul>
     </div>
-    <div>
-      Player cards:
-      <ul>
-        <li v-for="card in playerCards" :key="card.id">{{ card.fullName }}</li>
-      </ul>
+    <div class="" v-for="p of activePlayers" :key="p.name">
+      <div>
+        {{ p.name }}'s cards:
+        <ul>
+          <li v-for="card in p.cards" :key="card.id">
+            <div class="card">
+              {{ card.fullName }}
+            </div>
+          </li>
+        </ul>
+
+        <button type="button" class="btn" @click="dealCard">Hit</button>
+        <button type="button" class="btn" @click="stay">Stay</button>
+      </div>
     </div>
   </section>
 </template>

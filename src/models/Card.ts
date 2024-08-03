@@ -1,4 +1,4 @@
-import type { CardColor, CardConstructor, CardRank, CardSuit, CardValue } from './card.model'
+import type { CardColor, CardRank, CardSuit } from './card.model'
 
 /**
  * base class that all cards extend from.
@@ -7,7 +7,7 @@ import type { CardColor, CardConstructor, CardRank, CardSuit, CardValue } from '
  *
  *
  */
-export abstract class CardBase {
+export class Card {
   rank: CardRank
   suit: CardSuit
 
@@ -31,7 +31,7 @@ export abstract class CardBase {
   }
 
   get fullName(): string {
-    return `${this.rank} of ${this.suit}`
+    return `${this.fullRank} of ${this.suit}`
   }
 
   get id(): string {
@@ -51,18 +51,14 @@ export abstract class CardBase {
   get isHonourCard(): boolean {
     return this.isFaceCard || this.isAce
   }
-  cardSuitToColor: Record<CardSuit, CardColor> = {
+  readonly cardSuitToColor: Record<CardSuit, CardColor> = {
     hearts: 'red',
     diamonds: 'red',
     clubs: 'black',
     spades: 'black'
   }
-  /**
-   * value can change depending on the game
-   */
-  abstract get value(): CardValue
 
-  constructor(card: CardConstructor) {
+  constructor(card: { rank: CardRank; suit: CardSuit }) {
     this.rank = card.rank
     this.suit = card.suit
   }
