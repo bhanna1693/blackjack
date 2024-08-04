@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import CardList from '@/components/CardList.vue'
 import PlayingCard from '@/components/PlayingCard.vue'
-import { Card } from '@/models/Card'
 import { Deck } from '@/models/Deck'
 import { computed, ref } from 'vue'
 
@@ -23,7 +23,6 @@ const actionBtns = computed(() => [
     onClick: () => deck.value.reset()
   }
 ])
-const unknownCard = new Card({ rank: '10', suit: 'Clubs' })
 </script>
 
 <template>
@@ -47,14 +46,9 @@ const unknownCard = new Card({ rank: '10', suit: 'Clubs' })
         Click to deal card
       </button>
     </div>
-    <div>
-      <h3>Remaining Cards</h3>
-      <ul>
-        <li v-for="card of remainingCards" :key="card.id">
-          {{ card.fullName }}
-        </li>
-      </ul>
-    </div>
+
+    <CardList title="Remaining Cards" :cards="remainingCards" />
+
     <div>
       <template v-if="lastDealtCard">
         <h3>Last Card Dealt</h3>
@@ -63,16 +57,11 @@ const unknownCard = new Card({ rank: '10', suit: 'Clubs' })
 
       <template v-else>
         <h3>No Cards Dealt</h3>
-        <PlayingCard :card="unknownCard" :isFaceDown="true" />
+        <PlayingCard :card="remainingCards[0]" :isFaceDown="true" />
       </template>
 
       <template v-if="previousDealtCards.length">
-        <h3>Previous Dealt Cards</h3>
-        <ul>
-          <li v-for="card of previousDealtCards" :key="card.id">
-            {{ card.fullName }}
-          </li>
-        </ul>
+        <CardList title="Previous Cards" :cards="previousDealtCards" />
       </template>
     </div>
   </div>
