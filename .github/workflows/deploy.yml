@@ -26,11 +26,14 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: ${{runner.temp}}/artifact.tar
+      - name: Commit to github-pages branch
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git checkout -b github-pages
+          git add .
+          git commit -m "Deploy to GitHub Pages"
+          git push origin github-pages
 
   # Deployment job
   deploy:
