@@ -7,7 +7,7 @@ defineProps<{ card: Card }>()
 <template>
   <div class="shadow-xl overflow-auto">
     <figure class="my-0">
-      <img :src="card.frontSvgPath" :alt="card.fullName" />
+      <img :src="card.frontImgSrc" :alt="card.fullName" />
     </figure>
   </div>
 </template>

@@ -37,11 +37,18 @@ export class Card {
     return `${this.rank}-${this.suit}`
   }
 
-  get frontSvgPath(): string {
-    return `/playing_cards/fronts/${this.suit.toLowerCase()}_${this.fullRank.toLowerCase()}.svg`
+  get assetPrefix(): string {
+    if (import.meta.env.DEV) {
+      return ''
+    }
+
+    return '/blackjack'
   }
-  get backSvgPath(): string {
-    return `/playing_cards/backs/astronaut.svg`
+  get frontImgSrc(): string {
+    return `${this.assetPrefix}/playing_cards/fronts/${this.suit.toLowerCase()}_${this.fullRank.toLowerCase()}.svg`
+  }
+  get backImgSrc(): string {
+    return `${this.assetPrefix}/playing_cards/backs/astronaut.svg`
   }
 
   get isFaceCard(): boolean {
