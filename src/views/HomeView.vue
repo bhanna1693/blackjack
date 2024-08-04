@@ -29,7 +29,7 @@ function dealCard() {
     </button>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <div class="col-span-2">
       <h2>Deck Details</h2>
 
@@ -42,23 +42,20 @@ function dealCard() {
             </li>
           </ul>
         </div>
-        <div>
-          <h3>Dealt Cards</h3>
-          <ul>
+        <div v-if="lastCardDealt">
+          <h3>Last Card Dealt</h3>
+          <p>{{ lastCardDealt.fullName }}</p>
+          <PlayingCard :card="lastCardDealt" />
+
+          <h3>Previous Dealt Cards</h3>
+          <ul v-if="deck.dealtCards.length">
             <li v-for="card of deck.dealtCards" :key="card.id">
               {{ card.fullName }}
             </li>
           </ul>
+
+          <template v-else>No card dealt</template>
         </div>
-      </div>
-    </div>
-
-    <div>
-      <h2>Last Card Dealt</h2>
-
-      <div v-if="lastCardDealt">
-        <h3 class="mt-[3.5rem]">{{ lastCardDealt.fullName }}</h3>
-        <PlayingCard :card="lastCardDealt" />
       </div>
     </div>
   </div>

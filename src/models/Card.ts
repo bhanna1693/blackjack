@@ -54,10 +54,10 @@ export class Card {
     return this.isFaceCard || this.isAce
   }
   readonly cardSuitToColor: Record<CardSuit, CardColor> = {
-    hearts: 'red',
-    diamonds: 'red',
-    clubs: 'black',
-    spades: 'black'
+    Hearts: 'red',
+    Diamonds: 'red',
+    Clubs: 'black',
+    Spades: 'black'
   }
 
   constructor(card: { rank: CardRank; suit: CardSuit }) {

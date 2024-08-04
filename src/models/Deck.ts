@@ -19,7 +19,7 @@ export class Deck {
     'K',
     'A'
   ]
-  private readonly cardSuits: CardSuit[] = ['hearts', 'diamonds', 'clubs', 'spades']
+  private readonly cardSuits: CardSuit[] = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
   numberOfDecks: number
   constructor(numberOfDecks = 1) {
     this.numberOfDecks = numberOfDecks
