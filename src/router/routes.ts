@@ -5,12 +5,18 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
-    component: HomeView
+    component: HomeView,
+    meta: {
+      title: 'Home'
+    }
   },
   {
     path: '/blackjack',
     name: 'Blackjack',
-    component: () => import('../views/BlackjackView.vue')
+    component: () => import('../views/BlackjackView.vue'),
+    meta: {
+      title: 'Blackjack'
+    }
   }
   // {
   //   path: '/about',
