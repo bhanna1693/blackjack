@@ -5,29 +5,42 @@ import { computed, ref } from 'vue'
 
 const deck = ref<Deck>(new Deck())
 
-const lastCardDealt = computed(() =>
-  deck.value.dealtCards.length ? deck.value.dealtCards[0] : undefined
-)
+const lastDealtCard = computed(() => deck.value.dealtCards[0] ?? undefined)
+const previousDealtCards = computed(() => deck.value.dealtCards.filter((_, i) => i > 0))
 
 const remainingCards = computed(() => [...deck.value.cards].reverse())
-
-function dealCard() {
-  deck.value.dealCard()
-}
+const actionBtns = computed(() => [
+  {
+    label: 'Shuffle',
+    tooltip: 'Shuffles the remaining cards in the deck',
+    onClick: () => deck.value.shuffle()
+  },
+  {
+    label: 'Deal Card',
+    tooltip: 'Deals a card from the top of the deck.',
+    onClick: () => deck.value.dealCard()
+  },
+  {
+    label: 'Reset',
+    tooltip: 'Resets the deck to its organized state.',
+    onClick: () => deck.value.reset()
+  }
+])
 </script>
 
 <template>
-  <h1>Basic Deck Implementation</h1>
+  <h1>Deck of Cards</h1>
 
   <div class="join join-horizontal">
-    <button type="button" class="join-item btn btn-outline text-primary" @click="deck.shuffle">
-      Shuffle
-    </button>
-    <button type="button" class="join-item btn btn-outline text-primary" @click="dealCard">
-      Deal Card
-    </button>
-    <button type="button" class="join-item btn btn-outline text-primary" @click="deck.reset">
-      Reset
+    <button
+      v-for="btn of actionBtns"
+      :key="btn.label"
+      type="button"
+      class="join-item btn btn-outline text-primary tooltip tooltip-primary tooltip-bottom"
+      @click="btn.onClick"
+      :data-tip="btn.tooltip"
+    >
+      {{ btn.label }}
     </button>
   </div>
 
@@ -40,19 +53,19 @@ function dealCard() {
         </li>
       </ul>
     </div>
-    <div v-if="lastCardDealt">
+    <div v-if="lastDealtCard">
       <h3>Last Card Dealt</h3>
-      <p>{{ lastCardDealt.fullName }}</p>
-      <PlayingCard :card="lastCardDealt" />
+      <p>{{ lastDealtCard.fullName }}</p>
+      <PlayingCard :card="lastDealtCard" />
 
-      <h3>Previous Dealt Cards</h3>
-      <ul v-if="deck.dealtCards.length">
-        <li v-for="card of deck.dealtCards" :key="card.id">
-          {{ card.fullName }}
-        </li>
-      </ul>
-
-      <template v-else>No card dealt</template>
+      <template v-if="previousDealtCards.length">
+        <h3>Previous Dealt Cards</h3>
+        <ul>
+          <li v-for="card of previousDealtCards" :key="card.id">
+            {{ card.fullName }}
+          </li>
+        </ul>
+      </template>
     </div>
   </div>
 </template>
