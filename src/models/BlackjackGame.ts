@@ -4,7 +4,8 @@ import type { Player } from './Player'
 
 export class Blackjack extends GameBase {
   title = 'Blackjack'
-  activePlayer: Player
+  activePlayerIdx: number = 0
+  dealerFinalScore: number | null = null
 
   /**
    * Constructs a new instance of the BlackjackGame class.
@@ -20,11 +21,11 @@ export class Blackjack extends GameBase {
     props.players = props.players.sort((a, b) => (a.isDealer ? 1 : -1))
 
     super(props)
-    this.activePlayer = this.getPlayers()[0]
   }
   startGame() {
     this.deck = new Deck()
     this.deck.shuffle()
+    this.dealerFinalScore = null
     this.players.forEach((player) => {
       player.cards = []
     })
@@ -33,13 +34,16 @@ export class Blackjack extends GameBase {
         player.cards.push(this.deck.dealCard())
       })
     }
-    this.activePlayer = this.players[0]
+    this.activePlayerIdx = 0
   }
   getDealer(): Player {
     return this.players.find((player) => player.isDealer)!
   }
   getPlayers(): Player[] {
     return this.players.filter((player) => !player.isDealer)
+  }
+  getActivePlayer(): Player {
+    return this.players[this.activePlayerIdx]
   }
 
   getPlayerScore(player: Player): number {
@@ -62,41 +66,63 @@ export class Blackjack extends GameBase {
       return score + cardScore
     }, 0)
   }
-
-  isPlayerBusted(player: Player): boolean {
-    return this.getPlayerScore(player) > 21
-  }
   playerHit(player: Player) {
     player.cards.push(this.deck.dealCard())
+    this.postHit(player)
   }
+  postHit(player: Player) {
+    if (this.getPlayerScore(player) >= 21) {
+      this.activePlayerIdx = this.activePlayerIdx + 1
+      this.checkIfDealerTurn()
+    }
+  }
+
   playerStay(player: Player) {
-    const playerIndex = this.players.indexOf(player)
-    if (playerIndex === this.players.length - 1) {
+    this.activePlayerIdx = this.activePlayerIdx + 1
+    this.checkIfDealerTurn()
+  }
+  checkIfDealerTurn() {
+    if (this.getActivePlayer() === this.getDealer()) {
       this.dealerTurn()
-    } else {
-      this.activePlayer = this.players[playerIndex + 1]
     }
   }
   dealerTurn() {
     const dealer = this.getDealer()
-    dealer.cards.push(this.deck.dealCard())
     while (this.getPlayerScore(dealer) < 17) {
       dealer.cards.push(this.deck.dealCard())
     }
-    this.calculateWinner()
+    this.dealerFinalScore = this.getPlayerScore(dealer)
   }
-  calculateWinner() {
-    const dealer = this.getDealer()
-    const dealerScore = this.getPlayerScore(dealer)
-    // this.getPlayers().forEach((player) => {
-    //   const playerScore = this.getPlayerScore(player)
-    //   if (playerScore > 21) {
-    //     player.isWinner = false
-    //   } else if (dealerScore > 21 || playerScore > dealerScore) {
-    //     player.isWinner = true
-    //   } else {
-    //     player.isWinner = false
-    //   }
-    // })
+  isPlayerWinner(player: Player): boolean {
+    if (this.dealerFinalScore === null) {
+      return false
+    }
+    return this.dealerFinalScore > 21 || this.dealerFinalScore < this.getPlayerScore(player)
+  }
+  isDealerWinner() {
+    if (this.dealerFinalScore === null) {
+      return false
+    }
+    return this.getPlayers().every(
+      (player) =>
+        this.getPlayerScore(player) > 21 ||
+        (this.dealerFinalScore ?? 0) >= this.getPlayerScore(player)
+    )
+  }
+  isPlayerBusted(player: Player): boolean {
+    return this.getPlayerScore(player) > 21
+  }
+
+  isPlayersTurn(player: Player) {
+    return player === this.getActivePlayer()
+  }
+  isPlayerBlackjack(player: Player) {
+    return this.getPlayerScore(player) === 21 && player.cards.length === 2
+  }
+  isPlayerPush(player: Player) {
+    if (player.isDealer) {
+      return false
+    }
+    return this.getPlayerScore(player) === this.dealerFinalScore
   }
 }

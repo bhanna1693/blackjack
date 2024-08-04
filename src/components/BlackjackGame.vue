@@ -20,21 +20,23 @@ function stay(player: Player) {
 </script>
 
 <template>
-  <h1>Blackjack</h1>
-
-  <div class="flex items-center justify-center">
-    <button type="button" class="btn" @click="startGame">Start New Game</button>
+  <div class="flex items-center justify-center my-4">
+    <button type="button" class="btn btn-accent" @click="startGame">Start New Game</button>
   </div>
 
   <section class="flex flex-col justify-center items-center">
-    <PlayerHand
-      :blackjack="blackjack"
-      :player="blackjack.getDealer()"
-      :dealCard="dealCard"
-      :stay="stay"
-    />
-    <div v-for="p of blackjack.getPlayers()" :key="p.name">
-      <PlayerHand :blackjack="blackjack" :player="p" @dealCard="dealCard" @stay="stay" />
+    <div class="dealer">
+      <PlayerHand
+        :blackjack="blackjack"
+        :player="blackjack.getDealer()"
+        :dealCard="dealCard"
+        :stay="stay"
+      />
+    </div>
+    <div class="players flex justify-between">
+      <template v-for="p of blackjack.getPlayers()" :key="p.name">
+        <PlayerHand :blackjack="blackjack" :player="p" @dealCard="dealCard" @stay="stay" />
+      </template>
     </div>
   </section>
 </template>

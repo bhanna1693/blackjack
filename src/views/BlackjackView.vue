@@ -28,12 +28,10 @@ onMounted(() => {
 })
 </script>
 <template>
-  <div class="max-w-screen-md">
-    <template v-if="isLoading">
-      <div>Loading...</div>
-    </template>
-    <template v-else-if="isLoaded">
-      <BlackjackGame v-if="game instanceof Blackjack" :blackjack="game" />
-    </template>
-  </div>
+  <template v-if="isLoading">
+    <div>Loading...</div>
+  </template>
+  <template v-else-if="isLoaded">
+    <BlackjackGame v-if="game instanceof Blackjack" :blackjack="game" />
+  </template>
 </template>

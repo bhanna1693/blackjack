@@ -37,8 +37,11 @@ export class Card {
     return `${this.rank}-${this.suit}`
   }
 
-  get svgUrl(): string {
-    return `@/assets/playing_cards/fronts/png_96_dpi/${this.suit.toLowerCase()}_${this.fullRank.toLowerCase()}.png`
+  get frontSvgPath(): string {
+    return `/playing_cards/fronts/${this.suit.toLowerCase()}_${this.fullRank.toLowerCase()}.svg`
+  }
+  get backSvgPath(): string {
+    return `/playing_cards/backs/astronaut.svg`
   }
 
   get isFaceCard(): boolean {
