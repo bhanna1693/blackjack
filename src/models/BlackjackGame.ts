@@ -6,6 +6,7 @@ export class Blackjack extends GameBase {
   title = 'Blackjack'
   activePlayerIdx: number = 0
   dealerFinalScore: number | null = null
+  gameStatus: 'inProgress' | 'over' = 'over'
 
   /**
    * Constructs a new instance of the BlackjackGame class.
@@ -35,6 +36,7 @@ export class Blackjack extends GameBase {
       })
     }
     this.activePlayerIdx = 0
+    this.gameStatus = 'inProgress'
   }
   getDealer(): Player {
     return this.players.find((player) => player.isDealer)!
@@ -92,6 +94,7 @@ export class Blackjack extends GameBase {
       dealer.cards.push(this.deck.dealCard())
     }
     this.dealerFinalScore = this.getPlayerScore(dealer)
+    this.gameStatus = 'over'
   }
   isPlayerWinner(player: Player): boolean {
     if (this.dealerFinalScore === null) {
