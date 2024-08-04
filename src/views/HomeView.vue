@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import PlayingCard from '@/components/PlayingCard.vue'
 import { Deck } from '@/models/Deck'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const deck = ref<Deck>(new Deck())
+
+const lastCardDealt = computed(() =>
+  deck.value.dealtCards.length ? deck.value.dealtCards[0] : undefined
+)
 
 function dealCard() {
   deck.value.dealCard()
@@ -38,7 +42,7 @@ function dealCard() {
             </li>
           </ul>
         </div>
-        <div class="ml-4">
+        <div>
           <h3>Dealt Cards</h3>
           <ul>
             <li v-for="card of deck.dealtCards" :key="card.id">
@@ -52,7 +56,10 @@ function dealCard() {
     <div>
       <h2>Last Card Dealt</h2>
 
-      <PlayingCard :card="deck.dealtCards[0]" />
+      <div v-if="lastCardDealt">
+        <h3 class="mt-[3.5rem]">{{ lastCardDealt.fullName }}</h3>
+        <PlayingCard :card="lastCardDealt" />
+      </div>
     </div>
   </div>
 </template>
