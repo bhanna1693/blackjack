@@ -9,6 +9,8 @@ const lastCardDealt = computed(() =>
   deck.value.dealtCards.length ? deck.value.dealtCards[0] : undefined
 )
 
+const remainingCards = computed(() => [...deck.value.cards].reverse())
+
 function dealCard() {
   deck.value.dealCard()
 }
@@ -29,34 +31,28 @@ function dealCard() {
     </button>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div class="col-span-2">
-      <h2>Deck Details</h2>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <h3>Remaining Cards</h3>
+      <ul>
+        <li v-for="card of remainingCards" :key="card.id">
+          {{ card.fullName }}
+        </li>
+      </ul>
+    </div>
+    <div v-if="lastCardDealt">
+      <h3>Last Card Dealt</h3>
+      <p>{{ lastCardDealt.fullName }}</p>
+      <PlayingCard :card="lastCardDealt" />
 
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <h3>Remaining Cards</h3>
-          <ul>
-            <li v-for="card of deck.cards" :key="card.id">
-              {{ card.fullName }}
-            </li>
-          </ul>
-        </div>
-        <div v-if="lastCardDealt">
-          <h3>Last Card Dealt</h3>
-          <p>{{ lastCardDealt.fullName }}</p>
-          <PlayingCard :card="lastCardDealt" />
+      <h3>Previous Dealt Cards</h3>
+      <ul v-if="deck.dealtCards.length">
+        <li v-for="card of deck.dealtCards" :key="card.id">
+          {{ card.fullName }}
+        </li>
+      </ul>
 
-          <h3>Previous Dealt Cards</h3>
-          <ul v-if="deck.dealtCards.length">
-            <li v-for="card of deck.dealtCards" :key="card.id">
-              {{ card.fullName }}
-            </li>
-          </ul>
-
-          <template v-else>No card dealt</template>
-        </div>
-      </div>
+      <template v-else>No card dealt</template>
     </div>
   </div>
 </template>
