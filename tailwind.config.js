@@ -1,13 +1,13 @@
 /** @type {import('tailwindcss').Config} */
+import tailwindTypography from '@tailwindcss/typography'
 import daisyui from 'daisyui'
-
 // eslint-disable-next-line no-undef
 module.exports = {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {}
   },
-  plugins: [daisyui],
+  plugins: [tailwindTypography, daisyui],
   daisyui: {
     themes: ['light', 'dark', 'retro'], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
     darkTheme: 'dark', // name of one of the included themes for dark mode
