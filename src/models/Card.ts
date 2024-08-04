@@ -1,4 +1,4 @@
-import type { CardColor, CardRank, CardSuit } from './card.model'
+import type { CardBackChoice, CardColor, CardRank, CardSuit } from './card.model'
 
 /**
  * base class that all cards extend from.
@@ -37,6 +37,9 @@ export class Card {
     return `${this.rank}-${this.suit}`
   }
 
+  /**
+   * needed to work with github pages
+   */
   get assetPrefix(): string {
     if (import.meta.env.DEV) {
       return ''
@@ -44,11 +47,12 @@ export class Card {
 
     return '/blackjack'
   }
-  get frontImgSrc(): string {
+  getFrontImgSrc(): string {
     return `${this.assetPrefix}/playing_cards/fronts/${this.suit.toLowerCase()}_${this.fullRank.toLowerCase()}.svg`
   }
-  get backImgSrc(): string {
-    return `${this.assetPrefix}/playing_cards/backs/astronaut.svg`
+
+  getBackOfCardImgSrc(imgChoice: CardBackChoice = 'astronaut'): string {
+    return `${this.assetPrefix}/playing_cards/backs/${imgChoice}.svg`
   }
 
   get isFaceCard(): boolean {
