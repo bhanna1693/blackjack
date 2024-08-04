@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
-    "build-github-pages": "vite build --base /blackjack/ --outDir docs",
+    "build-github-pages": "npm run type-check && vite build --base /blackjack/ --outDir docs",
     "preview": "vite preview",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
