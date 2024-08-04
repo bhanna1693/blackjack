@@ -5,7 +5,7 @@ defineProps<{ card: Card }>()
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center shadow-xl w-36 overflow-auto">
+  <div class="flex flex-col items-center justify-center shadow-xl overflow-auto">
     <figure class="tooltip" :data-tip="card.fullName">
       <img :src="card.frontSvgPath" :alt="card.frontSvgPath" />
     </figure>

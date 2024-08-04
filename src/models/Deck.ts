@@ -3,6 +3,7 @@ import { type CardRank, type CardSuit } from './card.model'
 
 export class Deck {
   cards: Card[] = []
+  dealtCards: Card[] = []
   private readonly cardRanks: CardRank[] = [
     '2',
     '3',
@@ -36,11 +37,13 @@ export class Deck {
     if (!card) {
       throw new Error('No more cards in the deck')
     }
+    this.dealtCards.unshift(card)
     return card
   }
 
   reset() {
     this.cards = []
+    this.dealtCards = []
     // add all the cards back to the deck
     for (let i = 0; i < this.numberOfDecks; i++) {
       this.cardRanks.forEach((rank) => {

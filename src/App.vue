@@ -18,9 +18,7 @@ const _routes = ref(routes)
     </nav>
   </header>
 
-  <main class="px-4 mt-4">
+  <main class="prose container mx-auto px-4 mt-4">
     <RouterView />
   </main>
 </template>
-
-<style scoped></style>

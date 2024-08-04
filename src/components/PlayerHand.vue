@@ -8,7 +8,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="min-h-80 max-w-md">
+  <div class="min-w-sm">
     <div>
       <slot name="header"></slot>
     </div>
@@ -29,7 +29,7 @@ const props = defineProps<{
           }
         ]"
       >
-        <PlayingCard :card="card" />
+        <PlayingCard :card="card" class="w-36" />
       </div>
     </div>
 
