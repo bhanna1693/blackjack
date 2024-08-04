@@ -8,11 +8,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <div class="min-w-sm">
-    <div>
-      <slot name="header"></slot>
-    </div>
-
+  <div>
     <div
       class="flex content-center"
       :style="{
@@ -34,5 +30,8 @@ const props = defineProps<{
     </div>
 
     <slot name="actions"></slot>
+    <div>
+      <slot name="header"></slot>
+    </div>
   </div>
 </template>
