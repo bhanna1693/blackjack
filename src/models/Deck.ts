@@ -28,7 +28,18 @@ export class Deck {
 
   shuffle() {
     // shuffle the deck
-    this.cards = [...this.cards].sort(() => Math.random() - 0.5)
+    // first attempt - optimizes for simplicity
+    // this.cards = [...this.cards].sort(() => Math.random() - 0.5)
+
+    // second attempt - optimizes randomness
+    const newCards = []
+    let randomIdx = Math.floor(Math.random() * this.cards.length - 1)
+    while (this.cards.length) {
+      const card = this.cards.splice(randomIdx, 1)
+      newCards.push(card[0])
+      randomIdx = Math.floor(Math.random() * this.cards.length - 1)
+    }
+    this.cards = newCards
   }
 
   dealCard(): Card {
