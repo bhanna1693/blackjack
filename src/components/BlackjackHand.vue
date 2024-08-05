@@ -1,35 +1,15 @@
 <script setup lang="ts">
 import PlayingCard from '@/components/PlayingCard.vue'
-import type { Card } from '@/models/Card'
+import type { BlackjackPlayer } from '@/models/BlackjackPlayer'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  cards: Card[]
+  player: BlackjackPlayer
 }>()
 
-const total = computed(() => {
-  // need to calculate the ace last to account for the case where the ace is worth 11 or 1
-  const cardsSorted = [...props.cards].sort((a, b) => (a.isAce ? 1 : -1))
+const cards = computed(() => props.player.cards)
 
-  return cardsSorted.reduce((score, card) => {
-    let cardScore = 0
-    if (card.rank === 'A') {
-      if (score + 11 > 21) {
-        cardScore = 1
-      } else {
-        cardScore = 11
-      }
-    } else if (['K', 'Q', 'J'].includes(card.rank)) {
-      cardScore = 10
-    } else {
-      cardScore = parseInt(card.rank)
-    }
-    return score + cardScore
-  }, 0)
-})
-
-const isBusted = computed(() => total.value > 21)
-const maxWidth = computed(() => `${props.cards.length * 5.5}rem`)
+const maxWidth = computed(() => `${cards.value.length * 5.5}rem`)
 </script>
 
 <template>
@@ -50,12 +30,7 @@ const maxWidth = computed(() => `${props.cards.length * 5.5}rem`)
     </div>
     <p class="m-0 mt-1">
       Total:
-      <span
-        :class="{
-          'text-red-500': isBusted
-        }"
-        >{{ total }}</span
-      >
+      <span>{{ player.currentScore }}</span>
     </p>
   </div>
 </template>

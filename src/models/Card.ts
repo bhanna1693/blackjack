@@ -9,6 +9,11 @@ import type { CardBackChoice, CardColor, CardRank, CardSuit } from './card.model
 export class Card {
   rank: CardRank
   suit: CardSuit
+  isFaceDown = false
+
+  get isFaceUp() {
+    return !this.isFaceDown
+  }
 
   get color(): CardColor {
     return this.cardSuitToColor[this.suit]
@@ -74,5 +79,12 @@ export class Card {
   constructor(card: { rank: CardRank; suit: CardSuit }) {
     this.rank = card.rank
     this.suit = card.suit
+  }
+
+  setFaceDown() {
+    this.isFaceDown = true
+  }
+  setFaceUp() {
+    this.isFaceDown = false
   }
 }

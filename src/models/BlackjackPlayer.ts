@@ -1,15 +1,40 @@
-import type { Deck } from './Deck'
+import type { Card } from './Card'
 import { Player } from './Player'
 
 export class BlackjackPlayer extends Player {
   finalScore = 0
+  currentScore = 0
+  hasBlackjack = false
+  isBusted = false
 
-  playerHit(deck: Deck) {
-    this.cards.push(deck.dealCard())
+  playerReset() {
+    this.cards = []
+    this.finalScore = 0
+    this.currentScore = 0
+    this.hasBlackjack = false
+    this.isBusted = false
+  }
+  calculateCurrentState() {
+    this.currentScore = this.getPlayerScore()
+    this.isBusted = this.currentScore > 21
+    this.hasBlackjack = this.cards.length === 2 && this.currentScore === 21
+    if (this.isBusted || this.hasBlackjack) {
+      this.finalScore = this.currentScore
+    }
   }
 
-  playerStand() {
-    this.finalScore = this.getPlayerScore()
+  addCard(card: Card) {
+    this.cards.push(card)
+    this.calculateCurrentState()
+    if (this.isBusted || this.hasBlackjack) {
+      this.stand()
+    }
+  }
+
+  stand() {
+    this.cards.forEach((c) => c.setFaceUp())
+    this.calculateCurrentState()
+    this.finalScore = this.currentScore
   }
 
   getPlayerScore() {
@@ -31,16 +56,6 @@ export class BlackjackPlayer extends Player {
       }
       return score + cardScore
     }, 0)
-  }
-
-  playerHasBlackjack() {
-    return this.cards.length === 2 && this.getPlayerScore() === 21
-  }
-  isPlayerBlackjack() {
-    return this.getPlayerScore() === 21 && this.cards.length === 2
-  }
-  isPlayerBusted(): boolean {
-    return this.getPlayerScore() > 21
   }
 }
 export class BlackjackDealer extends BlackjackPlayer {

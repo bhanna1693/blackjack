@@ -7,48 +7,65 @@ export const useBlackjackStore = defineStore('blackjack', () => {
   const dealer = ref<BlackjackDealer>(new BlackjackDealer())
   const players = ref<BlackjackPlayer[]>([new BlackjackPlayer({ name: 'Brian' })])
 
-  const activePlayerIndex = ref(0)
+  const activePlayerIndex = ref(-1)
   const deck = ref<Deck>(new Deck())
   const isDealersTurn = computed(() => activePlayerIndex.value > players.value.length - 1)
+  const getActivePlayer = computed(() =>
+    activePlayerIndex.value > -1 ? players.value[activePlayerIndex.value] : undefined
+  )
+  const gameStatus = ref<'init' | 'inProgress' | 'over'>('init')
+  const isGameOver = computed(() => gameStatus.value === 'over')
+  const isGameInProgress = computed(() => gameStatus.value === 'inProgress')
+  const isGameInit = computed(() => gameStatus.value === 'init')
 
   function startGame() {
+    activePlayerIndex.value = -1
+    gameStatus.value = 'inProgress'
     deck.value = new Deck()
     deck.value.shuffle()
-    dealer.value.cards = []
-    dealer.value.finalScore = 0
-    players.value.forEach((player) => {
-      player.cards = []
-      player.finalScore = 0
-    })
+    dealer.value.playerReset()
+    players.value.forEach((player) => player.playerReset())
     for (let i = 0; i < 2; i++) {
-      players.value.forEach((player) => player.cards.push(deck.value.dealCard()))
-      dealer.value.cards.push(deck.value.dealCard())
+      players.value.forEach((player) => player.addCard(deck.value.dealCard()))
+      const card = deck.value.dealCard()
+      if (i === 0) {
+        card.setFaceDown()
+      }
+      dealer.value.addCard(card)
     }
-    activePlayerIndex.value = 0
+    nextPlayer()
+    if (dealer.value.hasBlackjack) {
+      players.value.forEach((p) => playerStand(p))
+      dealersTurn()
+    }
   }
   function nextPlayer() {
     activePlayerIndex.value++
     if (isDealersTurn.value) {
       dealersTurn()
+    } else if (getActivePlayer.value?.hasBlackjack || getActivePlayer.value?.isBusted) {
+      nextPlayer()
     }
   }
   function playerHit(player: BlackjackPlayer) {
-    player.cards.push(deck.value.dealCard())
-    if (player.isPlayerBusted() || player.isPlayerBlackjack()) {
+    player.addCard(deck.value.dealCard())
+    if (player.isBusted || player.hasBlackjack) {
       playerStand(player)
     }
   }
   function playerStand(player: BlackjackPlayer) {
-    player.playerStand()
+    player.stand()
     nextPlayer()
   }
   function dealersTurn() {
     console.log('dealer turn')
-    while (dealer.value.getPlayerScore() < 17) {
-      dealer.value.cards.push(deck.value.dealCard())
+    dealer.value.cards.forEach((c) => c.setFaceUp())
+    dealer.value.calculateCurrentState()
+    while (dealer.value.currentScore < 17) {
+      dealer.value.addCard(deck.value.dealCard())
     }
-    dealer.value.playerStand()
-    // this.gameStatus = 'over'
+    dealer.value.stand()
+    gameStatus.value = 'over'
   }
 
   return {
@@ -57,6 +74,9 @@ export const useBlackjackStore = defineStore('blackjack', () => {
     activePlayerIndex,
     deck,
     isDealersTurn,
+    isGameOver,
+    isGameInProgress,
+    isGameInit,
     startGame,
     playerHit,
     playerStand,
