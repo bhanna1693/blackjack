@@ -2,7 +2,14 @@ import { Card } from './Card'
 import { type CardBackChoice, type CardRank, type CardSuit } from './card.model'
 
 export class Deck {
+  /**
+   * remaining cards
+   */
   cards: Card[] = []
+
+  /**
+   * previously dealt cards
+   */
   dealtCards: Card[] = []
   private readonly cardRanks: CardRank[] = [
     '2',
@@ -32,6 +39,7 @@ export class Deck {
     // this.cards = [...this.cards].sort(() => Math.random() - 0.5)
 
     // second attempt - optimizes randomness
+    // Fisher-Yates shuffle algorithm
     const newCards = []
     let randomIdx = Math.floor(Math.random() * this.cards.length - 1)
     while (this.cards.length) {
@@ -42,20 +50,29 @@ export class Deck {
     this.cards = newCards
   }
 
+  /**
+   * removes card from the end cards array
+   *
+   * @returns card from the top of deck
+   *
+   * also adds card to dealtCards array
+   */
   dealCard(): Card {
     // deal a card
     const card = this.cards.pop()
     if (!card) {
       throw new Error('No more cards in the deck')
     }
-    this.dealtCards.unshift(card)
+    this.dealtCards.push(card)
     return card
   }
 
+  /**
+   * remove and add all the cards back to the deck
+   */
   reset() {
     this.cards = []
     this.dealtCards = []
-    // add all the cards back to the deck
     this.cardRanks.forEach((rank) => {
       this.cardSuits.forEach((suit) => {
         this.cards.push(

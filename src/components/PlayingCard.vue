@@ -5,7 +5,7 @@ defineProps<{ card: Card }>()
 </script>
 
 <template>
-  <div class="shadow-xl overflow-auto">
+  <div class="overflow-auto">
     <figure class="my-0">
       <img :src="card.imgSrc" :alt="card.fullName" />
     </figure>

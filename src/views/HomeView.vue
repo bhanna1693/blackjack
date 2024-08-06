@@ -7,10 +7,15 @@ import { useSelectedCardImageStore } from '@/stores/card-background'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 
-const deck = ref<Deck>(new Deck())
+const cardBackgroundStore = useSelectedCardImageStore()
+const { demoSelectedCard, selectedCardImage } = storeToRefs(cardBackgroundStore)
 
-const lastDealtCard = computed(() => deck.value.dealtCards[0] ?? undefined)
-const previousDealtCards = computed(() => deck.value.dealtCards.filter((_, i) => i > 0))
+const deck = ref<Deck>(new Deck({ backImgChoice: selectedCardImage.value }))
+
+const lastDealtCard = computed(() => deck.value.dealtCards[deck.value.dealtCards.length - 1])
+
+// filter out first card because we show the card img instead
+const previousDealtCards = computed(() => [...deck.value.dealtCards].reverse().slice(1))
 
 const remainingCards = computed(() => [...deck.value.cards].reverse())
 const actionBtns = computed(() => [
@@ -25,9 +30,6 @@ const actionBtns = computed(() => [
     onClick: () => deck.value.reset()
   }
 ])
-
-const cardBackgroundStore = useSelectedCardImageStore()
-const { demoSelectedCard } = storeToRefs(cardBackgroundStore)
 </script>
 
 <template>

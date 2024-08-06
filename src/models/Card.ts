@@ -75,6 +75,9 @@ export class Card {
     this.imgSrc = this.isFaceDown ? this.backImgSrc : this.frontImgSrc
   }
 
+  /**
+   * Vue does not work well with `getters` so using functions to set imgSrc
+   */
   setFaceDown() {
     this.isFaceDown = true
     this.imgSrc = this.backImgSrc

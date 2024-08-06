@@ -14,6 +14,12 @@ export class BlackjackPlayer extends Player {
     this.hasBlackjack = false
     this.isBusted = false
   }
+
+  /**
+   * calculates and sets the current score
+   *
+   * sets other state variables based on the current score
+   */
   calculateCurrentState() {
     this.currentScore = this.getPlayerScore()
     this.isBusted = this.currentScore > 21
@@ -58,6 +64,9 @@ export class BlackjackPlayer extends Player {
     }, 0)
   }
 }
+/**
+ * convenience class for instantiating a Dealer BlackjackPlayer
+ */
 export class BlackjackDealer extends BlackjackPlayer {
   constructor() {
     super({ name: 'Dealer', playerType: 'dealer', cards: [] })
