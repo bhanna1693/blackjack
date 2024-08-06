@@ -40,14 +40,14 @@ describe('Card', () => {
   it('should return correct front image source', () => {
     const card = new Card({ rank: 'J' as CardRank, suit: 'Clubs' as CardSuit })
     const expectedSrc = `${import.meta.env.DEV ? '' : '/blackjack'}/playing_cards/fronts/clubs_jack.svg`
-    expect(card.getFrontImgSrc()).toBe(expectedSrc)
+    expect(card.frontImgSrc).toBe(expectedSrc)
   })
 
   it('should return correct back image source', () => {
     const card = new Card({ rank: 'A' as CardRank, suit: 'Hearts' as CardSuit })
     const backChoice: CardBackChoice = 'astronaut'
     const expectedSrc = `${import.meta.env.DEV ? '' : '/blackjack'}/playing_cards/backs/${backChoice}.svg`
-    expect(card.getBackOfCardImgSrc(backChoice)).toBe(expectedSrc)
+    expect(card.backImgSrc).toBe(expectedSrc)
   })
 
   it('should correctly identify face cards', () => {

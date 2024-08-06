@@ -7,41 +7,26 @@ import type { CardBackChoice, CardColor, CardRank, CardSuit } from './card.model
  *
  */
 export class Card {
-  rank: CardRank
-  suit: CardSuit
-  isFaceDown = false
+  readonly rank: CardRank
+  readonly suit: CardSuit
+  isFaceDown: boolean
+  imgSrc: string
+  readonly frontImgSrc: string
+  readonly backImgSrc: string
+  readonly color: CardColor
+  readonly fullRank: string
+  readonly fullName: string
+  readonly id: string
+  readonly isFaceCard: boolean
+  readonly isAce: boolean
+  readonly isHonourCard: boolean
 
-  get isFaceUp() {
-    return !this.isFaceDown
+  readonly cardSuitToColor: Record<CardSuit, CardColor> = {
+    Hearts: 'red',
+    Diamonds: 'red',
+    Clubs: 'black',
+    Spades: 'black'
   }
-
-  get color(): CardColor {
-    return this.cardSuitToColor[this.suit]
-  }
-
-  get fullRank(): string {
-    switch (this.rank) {
-      case 'A':
-        return 'Ace'
-      case 'K':
-        return 'King'
-      case 'Q':
-        return 'Queen'
-      case 'J':
-        return 'Jack'
-      default:
-        return this.rank
-    }
-  }
-
-  get fullName(): string {
-    return `${this.fullRank} of ${this.suit}`
-  }
-
-  get id(): string {
-    return `${this.rank}-${this.suit}`
-  }
-
   /**
    * needed to work with github pages
    */
@@ -52,39 +37,50 @@ export class Card {
 
     return '/blackjack'
   }
-  getFrontImgSrc(): string {
-    return `${this.assetPrefix}/playing_cards/fronts/${this.suit.toLowerCase()}_${this.fullRank.toLowerCase()}.svg`
-  }
-
-  getBackOfCardImgSrc(imgChoice: CardBackChoice = 'astronaut'): string {
-    return `${this.assetPrefix}/playing_cards/backs/${imgChoice}.svg`
-  }
-
-  get isFaceCard(): boolean {
-    return this.rank === 'K' || this.rank === 'Q' || this.rank === 'J'
-  }
-  get isAce(): boolean {
-    return this.rank === 'A'
-  }
-  get isHonourCard(): boolean {
-    return this.isFaceCard || this.isAce
-  }
-  readonly cardSuitToColor: Record<CardSuit, CardColor> = {
-    Hearts: 'red',
-    Diamonds: 'red',
-    Clubs: 'black',
-    Spades: 'black'
-  }
-
-  constructor(card: { rank: CardRank; suit: CardSuit }) {
+  constructor(card: {
+    rank: CardRank
+    suit: CardSuit
+    isFaceDown?: boolean
+    backImgChoice?: CardBackChoice
+  }) {
     this.rank = card.rank
     this.suit = card.suit
+    this.isFaceDown = card.isFaceDown ?? false
+    this.color = this.cardSuitToColor[this.suit]
+    switch (this.rank) {
+      case 'A':
+        this.fullRank = 'Ace'
+        break
+      case 'K':
+        this.fullRank = 'King'
+        break
+      case 'Q':
+        this.fullRank = 'Queen'
+        break
+      case 'J':
+        this.fullRank = 'Jack'
+        break
+      default:
+        this.fullRank = this.rank
+        break
+    }
+
+    this.isAce = this.rank === 'A'
+    this.isFaceCard = this.rank === 'K' || this.rank === 'Q' || this.rank === 'J'
+    this.isHonourCard = this.isAce || this.isFaceCard
+    this.fullName = `${this.fullRank} of ${this.suit}`
+    this.id = `${this.rank}-${this.suit}`
+    this.frontImgSrc = `${this.assetPrefix}/playing_cards/fronts/${this.suit.toLowerCase()}_${this.fullRank.toLowerCase()}.svg`
+    this.backImgSrc = `${this.assetPrefix}/playing_cards/backs/${card.backImgChoice ?? 'astronaut'}.svg`
+    this.imgSrc = this.isFaceDown ? this.backImgSrc : this.frontImgSrc
   }
 
   setFaceDown() {
     this.isFaceDown = true
+    this.imgSrc = this.backImgSrc
   }
   setFaceUp() {
     this.isFaceDown = false
+    this.imgSrc = this.frontImgSrc
   }
 }

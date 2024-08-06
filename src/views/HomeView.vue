@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import CardList from '@/components/CardList.vue'
 import PlayingCard from '@/components/PlayingCard.vue'
+import SelectCardBg from '@/components/SelectCardBg.vue'
 import { Deck } from '@/models/Deck'
+import { useSelectedCardImageStore } from '@/stores/card-background'
+import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 
 const deck = ref<Deck>(new Deck())
@@ -16,13 +19,15 @@ const actionBtns = computed(() => [
     tooltip: 'Shuffles the remaining cards in the deck',
     onClick: () => deck.value.shuffle()
   },
-
   {
     label: 'Reset',
     tooltip: 'Resets the deck to its organized state.',
     onClick: () => deck.value.reset()
   }
 ])
+
+const cardBackgroundStore = useSelectedCardImageStore()
+const { demoSelectedCard } = storeToRefs(cardBackgroundStore)
 </script>
 
 <template>
@@ -57,7 +62,8 @@ const actionBtns = computed(() => [
 
       <template v-else>
         <h3>No Cards Dealt</h3>
-        <PlayingCard :card="remainingCards[0]" :isFaceDown="true" />
+        <PlayingCard :card="demoSelectedCard" />
+        <SelectCardBg />
       </template>
 
       <template v-if="previousDealtCards.length">

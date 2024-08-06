@@ -1,20 +1,13 @@
 <script setup lang="ts">
 import type { Card } from '@/models/Card'
-import type { CardBackChoice } from '@/models/card.model'
-import { computed } from 'vue'
 
-const props = defineProps<{ card: Card; imgChoice?: CardBackChoice }>()
-const imgSrc = computed(() =>
-  props.card.isFaceDown
-    ? props.card.getBackOfCardImgSrc(props.imgChoice)
-    : props.card.getFrontImgSrc()
-)
+defineProps<{ card: Card }>()
 </script>
 
 <template>
   <div class="shadow-xl overflow-auto">
     <figure class="my-0">
-      <img :src="imgSrc" :alt="card.fullName" />
+      <img :src="card.imgSrc" :alt="card.fullName" />
     </figure>
   </div>
 </template>

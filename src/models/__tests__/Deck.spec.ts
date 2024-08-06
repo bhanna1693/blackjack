@@ -15,11 +15,6 @@ describe('Deck', () => {
     expect(deck.cards.length).toBe(52) // 1 deck has 52 cards
   })
 
-  it('should initialize with multiple decks', () => {
-    const multiDeck = new Deck(2)
-    expect(multiDeck.cards.length).toBe(104) // 2 decks have 104 cards
-  })
-
   it('should shuffle the deck', () => {
     const originalOrder = [...deck.cards]
     deck.shuffle()
@@ -47,19 +42,5 @@ describe('Deck', () => {
     expect(deck.cards.length).toBe(51) // After dealing one card, there should be 51 cards
     deck.reset()
     expect(deck.cards.length).toBe(52) // Deck should be reset to 52 cards
-  })
-
-  it('should handle multiple decks correctly', () => {
-    const multiDeck = new Deck(2)
-    expect(multiDeck.cards.length).toBe(104) // 2 decks have 104 cards
-    multiDeck.shuffle()
-    const dealtCards = []
-    for (let i = 0; i < 104; i++) {
-      dealtCards.push(multiDeck.dealCard())
-    }
-    expect(dealtCards.length).toBe(104) // All cards should be dealt
-    expect(() => multiDeck.dealCard()).toThrow('No more cards in the deck')
-    multiDeck.reset()
-    expect(multiDeck.cards.length).toBe(104) // Reset should bring back 104 cards
   })
 })

@@ -1,5 +1,5 @@
 import { Card } from './Card'
-import { type CardRank, type CardSuit } from './card.model'
+import { type CardBackChoice, type CardRank, type CardSuit } from './card.model'
 
 export class Deck {
   cards: Card[] = []
@@ -20,9 +20,9 @@ export class Deck {
     'A'
   ]
   private readonly cardSuits: CardSuit[] = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
-  numberOfDecks: number
-  constructor(numberOfDecks = 1) {
-    this.numberOfDecks = numberOfDecks
+  backImgChoice: CardBackChoice
+  constructor(options?: { backImgChoice?: CardBackChoice }) {
+    this.backImgChoice = options?.backImgChoice ?? 'astronaut'
     this.reset()
   }
 
@@ -56,12 +56,16 @@ export class Deck {
     this.cards = []
     this.dealtCards = []
     // add all the cards back to the deck
-    for (let i = 0; i < this.numberOfDecks; i++) {
-      this.cardRanks.forEach((rank) => {
-        this.cardSuits.forEach((suit) => {
-          this.cards.push(new Card({ rank: rank as CardRank, suit: suit as CardSuit }))
-        })
+    this.cardRanks.forEach((rank) => {
+      this.cardSuits.forEach((suit) => {
+        this.cards.push(
+          new Card({
+            rank: rank as CardRank,
+            suit: suit as CardSuit,
+            backImgChoice: this.backImgChoice
+          })
+        )
       })
-    }
+    })
   }
 }

@@ -2,13 +2,14 @@ import { BlackjackDealer, BlackjackPlayer } from '@/models/BlackjackPlayer'
 import { Deck } from '@/models/Deck'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+import { useSelectedCardImageStore } from './card-background'
 
 export const useBlackjackStore = defineStore('blackjack', () => {
   const dealer = ref<BlackjackDealer>(new BlackjackDealer())
   const players = ref<BlackjackPlayer[]>([new BlackjackPlayer({ name: 'Brian' })])
 
   const activePlayerIndex = ref(-1)
-  const deck = ref<Deck>(new Deck())
+  const deck = ref<Deck>(getDeck())
   const isDealersTurn = computed(() => activePlayerIndex.value > players.value.length - 1)
   const getActivePlayer = computed(() =>
     activePlayerIndex.value > -1 ? players.value[activePlayerIndex.value] : undefined
@@ -18,10 +19,15 @@ export const useBlackjackStore = defineStore('blackjack', () => {
   const isGameInProgress = computed(() => gameStatus.value === 'inProgress')
   const isGameInit = computed(() => gameStatus.value === 'init')
 
+  function getDeck(): Deck {
+    const cardImageStore = useSelectedCardImageStore()
+    return new Deck({ backImgChoice: cardImageStore.selectedCardImage })
+  }
+
   function startGame() {
     activePlayerIndex.value = -1
     gameStatus.value = 'inProgress'
-    deck.value = new Deck()
+    deck.value = getDeck()
     deck.value.shuffle()
     dealer.value.playerReset()
     players.value.forEach((player) => player.playerReset())
