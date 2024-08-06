@@ -15,7 +15,7 @@ const deck = ref<Deck>(new Deck({ backImgChoice: selectedCardImage.value }))
 const lastDealtCard = computed(() => deck.value.dealtCards[deck.value.dealtCards.length - 1])
 
 // filter out first card because we show the card img instead
-const previousDealtCards = computed(() => [...deck.value.dealtCards].reverse().slice(1))
+const previousDealtCards = computed(() => deck.value.dealtCards.slice(0, -1).reverse())
 
 const remainingCards = computed(() => [...deck.value.cards].reverse())
 const actionBtns = computed(() => [
