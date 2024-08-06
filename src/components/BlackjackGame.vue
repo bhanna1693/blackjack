@@ -21,11 +21,6 @@ const {
     <div v-if="dealer.cards.length">
       <h3 class="text-center">{{ dealer.name }}</h3>
       <BlackjackHand :player="dealer" />
-      <div class="mt-4 flex flex-col items-center" v-if="isDealersTurn">
-        <template v-if="dealer.isBusted">
-          <div class="text-error">Dealer Busted!</div>
-        </template>
-      </div>
     </div>
 
     <hr class="divider" />
@@ -51,6 +46,14 @@ const {
                   @click="blackjackStore.playerStand(player)"
                 >
                   Stay
+                </button>
+                <button
+                  type="button"
+                  class="join-item btn btn-outline text-primary"
+                  @click="blackjackStore.playerDoubleDown(player)"
+                  v-if="player.cards.length === 2"
+                >
+                  Double Down
                 </button>
               </div>
             </template>

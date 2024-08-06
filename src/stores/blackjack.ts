@@ -57,6 +57,10 @@ export const useBlackjackStore = defineStore('blackjack', () => {
     player.stand()
     nextPlayer()
   }
+  function playerDoubleDown(player: BlackjackPlayer) {
+    player.addCard(deck.value.dealCard())
+    playerStand(player)
+  }
   function dealersTurn() {
     console.log('dealer turn')
     dealer.value.cards.forEach((c) => c.setFaceUp())
@@ -80,6 +84,7 @@ export const useBlackjackStore = defineStore('blackjack', () => {
     startGame,
     playerHit,
     playerStand,
+    playerDoubleDown,
     dealersTurn
   }
 })
