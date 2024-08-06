@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { BlackjackPlayer } from '@/models/BlackjackPlayer'
 import { useBlackjackStore } from '@/stores/blackjack'
 import { storeToRefs } from 'pinia'
 import BlackjackHand from './BlackjackHand.vue'
@@ -14,6 +15,37 @@ const {
   isGameInProgress,
   isGameInit
 } = storeToRefs(blackjackStore)
+
+function getPlayerResult(p: BlackjackPlayer): { msg: string; className: string } | undefined {
+  if (p.isBusted) {
+    return {
+      msg: 'Busted!',
+      className: 'text-error'
+    }
+  }
+  if (isGameOver) {
+    if (dealer.value.finalScore === p.finalScore) {
+      return {
+        msg: 'Push',
+        className: 'text-primary'
+      }
+    } else if (!dealer.value.isBusted && dealer.value.finalScore > p.finalScore) {
+      return {
+        msg: 'You lost!',
+        className: 'text-error'
+      }
+    } else {
+      return {
+        msg: p.hasBlackjack
+          ? 'Winner winner chicken dinner!'
+          : dealer.value.isBusted
+            ? 'Dealer Busted, You Won!'
+            : 'You Won!',
+        className: 'text-success'
+      }
+    }
+  }
+}
 </script>
 
 <template>
@@ -57,20 +89,10 @@ const {
                 </button>
               </div>
             </template>
-            <template v-else-if="player.isBusted">
-              <div class="text-error">Busted!</div>
-            </template>
-            <template v-else-if="dealer.finalScore === player.finalScore">
-              <div class="text-primary">Push</div>
-            </template>
-            <template v-else-if="!dealer.isBusted && dealer.finalScore > player.finalScore">
-              <div class="text-error">Dealer Wins!</div>
-            </template>
             <template v-else>
-              <div class="text-success">Winner!</div>
-              <template v-if="player.hasBlackjack">
-                <div class="text-accent">Blackjack!</div>
-              </template>
+              <div :class="getPlayerResult(player)?.className">
+                {{ getPlayerResult(player)?.msg }}
+              </div>
             </template>
           </div>
           <h3 class="text-center">{{ player.name }}</h3>
