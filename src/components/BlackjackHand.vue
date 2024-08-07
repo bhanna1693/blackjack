@@ -10,6 +10,15 @@ const props = defineProps<{
 const cards = computed(() => props.player.cards)
 
 const maxWidth = computed(() => `${cards.value.length * 5.5}rem`)
+
+const total = computed(() => {
+  const player = props.player
+
+  if (player.isDealer && player.finalScore === 0) {
+    return player.getPlayerScore(player.cards.slice(1))
+  }
+  return player.currentScore
+})
 </script>
 
 <template>
@@ -28,9 +37,9 @@ const maxWidth = computed(() => `${cards.value.length * 5.5}rem`)
         <PlayingCard :card="card" class="w-36" />
       </div>
     </div>
-    <p class="m-0 mt-1" v-if="!player.isDealer">
+    <p class="m-0 mt-1">
       Total:
-      <span>{{ player.currentScore }}</span>
+      <span>{{ total }}</span>
     </p>
   </div>
 </template>
