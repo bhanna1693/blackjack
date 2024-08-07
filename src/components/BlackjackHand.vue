@@ -28,7 +28,7 @@ const maxWidth = computed(() => `${cards.value.length * 5.5}rem`)
         <PlayingCard :card="card" class="w-36" />
       </div>
     </div>
-    <p class="m-0 mt-1">
+    <p class="m-0 mt-1" v-if="!player.isDealer">
       Total:
       <span>{{ player.currentScore }}</span>
     </p>
